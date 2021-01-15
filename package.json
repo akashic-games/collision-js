@@ -1,6 +1,6 @@
 {
   "name": "@akashic-extension/collision-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Math and collision library",
   "scripts": {
     "prepublishOnly": "npm run build",
