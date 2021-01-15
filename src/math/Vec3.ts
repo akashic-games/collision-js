@@ -322,7 +322,7 @@ export class Vec3 {
 	/**
 	 * X軸回転する。
 	 *
-	 * @param angle 回転の角度[deg]。
+	 * @param angle 回転の角度[radian]。
 	 */
 	rotateX(angle: number): this {
 		const c = Math.cos(angle);
@@ -339,7 +339,7 @@ export class Vec3 {
 	/**
 	 * Y軸回転する。
 	 *
-	 * @param angle 回転の角度[deg]。
+	 * @param angle 回転の角度[radian]。
 	 */
 	rotateY(angle: number): this {
 		const c = Math.cos(angle);
@@ -356,7 +356,7 @@ export class Vec3 {
 	/**
 	 * Z軸回転する。
 	 *
-	 * @param angle 回転の角度[deg]。
+	 * @param angle 回転の角度[radian]。
 	 */
 	rotateZ(angle: number): this {
 		const c = Math.cos(angle);

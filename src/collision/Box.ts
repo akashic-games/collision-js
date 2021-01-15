@@ -10,6 +10,6 @@ export interface Box {
     /** 縦・横の半分の長さ。 */
     halfExtend: Vec2Like;
 
-    /** 回転角度[deg]。 */
+    /** 回転角度[radian]。 */
     angle: number;
 }

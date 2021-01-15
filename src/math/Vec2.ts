@@ -292,7 +292,7 @@ export class Vec2 {
 	/**
 	 * 回転する。
 	 *
-	 * @param angle 回転の角度[deg]。
+	 * @param angle 回転の角度[radian]。
 	 */
 	rotate(angle: number): this {
 		const c = Math.cos(angle);
