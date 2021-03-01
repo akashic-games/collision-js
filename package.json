@@ -3,7 +3,6 @@
   "version": "1.0.1",
   "description": "Math and collision library",
   "scripts": {
-    "prepublishOnly": "npm run build",
     "prepare": "npm run build",
     "build": "rimraf ./lib && tsc -p ./tsconfig.json",
     "clean": "rimraf ./lib ./doc",
