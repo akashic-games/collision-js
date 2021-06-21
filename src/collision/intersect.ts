@@ -5,6 +5,8 @@ import { Circle } from "./Circle";
 import { Line } from "./Line";
 import { Segment } from "./Segment";
 import { Contact } from "./Contact";
+import { Polygon } from "./Polygon";
+import { gjkTest, supportPolygon } from "./gjk";
 
 /**
  * 平行判定。
@@ -675,4 +677,14 @@ export function segmentToBox(s: Segment, b: Box): boolean {
         endPosition: new Vec2(s.endPosition).sub(b.position).rotate(-b.angle)
     }
     return aabbToSegment(aabb, sl);
+}
+
+/**
+ * 多角形と多角形の交差判定。
+ *
+ * @param s1 多角形1。
+ * @param b 多角形2。
+ */
+ export function polygonToPolygon(p1: Polygon, p2: Polygon): boolean {
+    return gjkTest(p1, supportPolygon, p2, supportPolygon);
 }
