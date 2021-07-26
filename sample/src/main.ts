@@ -891,6 +891,36 @@ function createRegularPolygon(cx: number, cy: number, r: number, n: number): Pol
 	};
 }
 
+function polygonToSegmentDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const s: co.Segment = {
+		position: { x: 8, y: 128 },
+		endPosition: { x: 128, y: 8 }
+	};
+	const se = createSegmentE(scene, s, "blue", true);
+
+	const p = createRegularPolygon(250, 250, 180, 5);
+	const pe = new PolygonE({
+		scene,
+		polygon: p,
+		cssColor: "green"
+	});
+
+	se.pointMove.add(ev => {
+		Vec2.add(s.position, ev.prevDelta);
+		Vec2.add(s.endPosition, ev.prevDelta);
+		Vec2.add(se, ev.prevDelta);
+		se.cssColor = co.polygonToSegment(p, s) ? "red" : "blue";
+		se.modified();
+	});
+
+	root.append(pe);
+	root.append(se);
+
+	return root;
+}
+
 function polygonToPolygonDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
 
@@ -944,6 +974,7 @@ function main(_param: g.GameMainParameterObject): void {
 		{ ctor: lineToSegmentDemo, name: "Line to Segment" },
 		{ ctor: lineToBoxDemo, name: "Line to Box" },
 		{ ctor: segmentToBoxDemo, name: "Segment to Box" },
+		{ ctor: polygonToSegmentDemo, name: "Polygon to Segment"},
 		{ ctor: polygonToPolygonDemo, name: "Polygon to Polygon"}
 	];
 
