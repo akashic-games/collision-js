@@ -6,7 +6,7 @@ import { Line } from "./Line";
 import { Segment } from "./Segment";
 import { Contact } from "./Contact";
 import { Polygon } from "./Polygon";
-import { gjkTest, supportPolygon, supportSegment } from "./gjk";
+import { gjkTest, supportCircle, supportPolygon, supportSegment } from "./gjk";
 
 /**
  * 平行判定。
@@ -697,4 +697,14 @@ export function segmentToBox(s: Segment, b: Box): boolean {
  */
 export function polygonToSegment(p: Polygon, s: Segment): boolean {
     return gjkTest(p, supportPolygon, s, supportSegment);
+}
+
+/**
+ * 多角形と線分の交差判定。
+ *
+ * @param p 多角形。
+ * @param s 線分。
+ */
+ export function polygonToCircle(p: Polygon, c: Circle): boolean {
+    return gjkTest(p, supportPolygon, c, supportCircle);
 }

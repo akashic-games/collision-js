@@ -1,6 +1,7 @@
 import { Vec2, Vec2Like } from "../math";
 import { Polygon } from "./Polygon";
 import { Segment } from "./Segment";
+import { Circle } from "./Circle";
 
 function getFurthestVertex(vertices: Vec2Like[], dir: Vec2Like): Vec2Like {
     let furthest = Number.NEGATIVE_INFINITY;
@@ -40,6 +41,21 @@ export function supportPolygon(p: Polygon, dir: Vec2Like): Vec2Like {
  */
 export function supportSegment(s: Segment, dir: Vec2Like): Vec2Like {
     return getFurthestVertex([s.position, s.endPosition], dir);
+}
+
+/**
+ * 円のサポート関数。
+ *
+ * @param s: 線分。
+ * @param dir 方向ベクトル。
+ * @returns dirの方向にある最も遠い頂点。
+ */
+export function supportCircle(c: Circle, _dir: Vec2Like): Vec2Like {
+    const dir = new Vec2(_dir).normalize();
+     return getFurthestVertex([
+        new Vec2(dir).scale(c.radius).add(c.position),
+        new Vec2(dir).scale(-c.radius).add(c.position),
+    ], dir);
 }
 
 /**
