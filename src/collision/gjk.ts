@@ -1,18 +1,8 @@
 import { Vec2, Vec2Like } from "../math";
 import { Polygon } from "./Polygon";
+import { Segment } from "./Segment";
 
-/**
- * ポリゴンのサポート関数。
- *
- * 頂点が無いポリゴンの時、原点を返す。
- *
- * @param p ポリゴン。
- * @param dir 方向ベクトル。
- * @returns dirの方向にある最も遠い頂点。
- */
-export function supportPolygon(p: Polygon, dir: Vec2Like): Vec2Like {
-    const vertices = p.vertices;
-
+function getFurthestVertex(vertices: Vec2Like[], dir: Vec2Like): Vec2Like {
     let furthest = Number.NEGATIVE_INFINITY;
     let furthestVertex: Vec2Like = { x: 0, y: 0 };
 
@@ -26,6 +16,30 @@ export function supportPolygon(p: Polygon, dir: Vec2Like): Vec2Like {
     }
 
     return furthestVertex;
+}
+
+/**
+ * ポリゴンのサポート関数。
+ *
+ * 頂点が無いポリゴンの時、原点を返す。
+ *
+ * @param p ポリゴン。
+ * @param dir 方向ベクトル。
+ * @returns dirの方向にある最も遠い頂点。
+ */
+export function supportPolygon(p: Polygon, dir: Vec2Like): Vec2Like {
+    return getFurthestVertex(p.vertices, dir);
+}
+
+/**
+ * 線分のサポート関数。
+ *
+ * @param s: 線分。
+ * @param dir 方向ベクトル。
+ * @returns dirの方向にある最も遠い頂点。
+ */
+export function supportSegment(s: Segment, dir: Vec2Like): Vec2Like {
+    return getFurthestVertex([s.position, s.endPosition], dir);
 }
 
 /**
