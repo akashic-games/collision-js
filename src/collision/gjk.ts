@@ -59,6 +59,17 @@ export function supportCircle(c: Circle, _dir: Vec2Like): Vec2Like {
 }
 
 /**
+ * 点のサポート関数。
+ *
+ * @param v: 点の位置。
+ * @param dir 方向ベクトル。
+ * @returns dirの方向にある最も遠い頂点。
+ */
+ export function supportVec(v: GJKShape, dir: Vec2Like): Vec2Like {
+     return v.position;
+}
+
+/**
  * ベクトル三重積。
  * 一般的な A x (B x C) でなく A x B x C であることに注意。
  *
@@ -182,21 +193,15 @@ export type SupportFn<S extends GJKShape> = (shape: S, direction: Vec2Like) => V
  * @param sup2
  * @returns
  */
-export function gjkTest<S1 extends GJKShape, S2 extends GJKShape>(s1: S1, sup1: SupportFn<S1>, s2: S2, sup2: SupportFn<S2>): boolean {
+export function gjkTest<S1 extends GJKShape, S2 extends GJKShape>(
+    s1: S1, sup1: SupportFn<S1>,
+    s2: S2, sup2: SupportFn<S2>
+): boolean {
     const vertices: Vec2Like[] = [];
 
     let result;
-    let n = 0;
     do {
         result = evolveSimplex(s1, sup1, s2, sup2, vertices);
-
-        // let msg = `${n}: ${result} \n  `;
-        // vertices.forEach((v, idx) => {
-        //     msg += `V[${idx}](${v.x},${v.y}) \n  `;
-        // });
-        // console.log(msg);
-
-        n++;
     } while (result === "evolving");
 
     return result === "found";

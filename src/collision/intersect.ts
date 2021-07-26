@@ -6,7 +6,10 @@ import { Line } from "./Line";
 import { Segment } from "./Segment";
 import { Contact } from "./Contact";
 import { Polygon } from "./Polygon";
-import { gjkTest, supportCircle, supportPolygon, supportSegment } from "./gjk";
+import {
+    gjkTest,
+    supportCircle, supportPolygon, supportSegment, supportVec
+} from "./gjk";
 
 /**
  * 平行判定。
@@ -707,4 +710,14 @@ export function polygonToSegment(p: Polygon, s: Segment): boolean {
  */
  export function polygonToCircle(p: Polygon, c: Circle): boolean {
     return gjkTest(p, supportPolygon, c, supportCircle);
+}
+
+/**
+ * 多角形と線分の交差判定。
+ *
+ * @param p 多角形。
+ * @param v 点の位置。
+ */
+ export function polygonToVec(p: Polygon, v: Vec2Like): boolean {
+    return gjkTest(p, supportPolygon, { position: v }, supportVec);
 }
