@@ -921,6 +921,38 @@ function polygonToSegmentDemo(scene: g.Scene): g.E {
 	return root;
 }
 
+function polygonToCircleDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const red = (scene.assets.red as g.ImageAsset).asSurface();
+	const blue = (scene.assets.blue as g.ImageAsset).asSurface();
+
+	const c: co.Circle = {
+		position: { x: 64, y: 64 },
+		radius: 64
+	};
+	const ce = createCircleE(scene, c, blue, true);
+
+	const p = createRegularPolygon(250, 250, 180, 5);
+	const pe = new PolygonE({
+		scene,
+		polygon: p,
+		cssColor: "green"
+	});
+
+	ce.pointMove.add(ev => {
+		Vec2.add(c.position, ev.prevDelta);
+		Vec2.add(ce, ev.prevDelta);
+		ce.surface = co.polygonToCircle(p, c) ? red : blue;
+		ce.invalidate();
+	});
+
+	root.append(pe);
+	root.append(ce);
+
+	return root;
+}
+
 function polygonToPolygonDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
 
@@ -974,7 +1006,8 @@ function main(_param: g.GameMainParameterObject): void {
 		{ ctor: lineToSegmentDemo, name: "Line to Segment" },
 		{ ctor: lineToBoxDemo, name: "Line to Box" },
 		{ ctor: segmentToBoxDemo, name: "Segment to Box" },
-		{ ctor: polygonToSegmentDemo, name: "Polygon to Segment"},
+		{ ctor: polygonToSegmentDemo, name: "Polygon to Segment" },
+		{ ctor: polygonToCircleDemo, name: "Polygon to Circle"},
 		{ ctor: polygonToPolygonDemo, name: "Polygon to Polygon"}
 	];
 
