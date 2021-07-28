@@ -953,7 +953,7 @@ function polygonToCircleDemo(scene: g.Scene): g.E {
 	return root;
 }
 
-function vecToPolygonDemo(scene: g.Scene): g.E {
+function polygonToVecDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
 
 	const v: Vec2Like = { x: 32, y: 32 };
@@ -985,6 +985,38 @@ function vecToPolygonDemo(scene: g.Scene): g.E {
 
 	root.append(pe);
 	root.append(ve);
+
+	return root;
+}
+
+function polygonToBoxDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const b: co.Box = {
+		position: { x: 100, y: 100 },
+		halfExtend: { x: 64, y: 48 },
+		angle: -Math.PI / 6
+	};
+
+	const be = createBoxE(scene, b, "blue", true);
+
+	const p = createRegularPolygon(250, 250, 180, 5);
+	const pe = new PolygonE({
+		scene,
+		polygon: p,
+		cssColor: "green"
+	});
+
+	be.pointMove.add(ev => {
+		Vec2.add(b.position, ev.prevDelta);
+		Vec2.add(be, ev.prevDelta);
+		be.cssColor = co.polygonToBox(p, b) ? "red" : "blue";
+		be.modified();
+	});
+
+
+	root.append(pe);
+	root.append(be);
 
 	return root;
 }
@@ -1044,7 +1076,8 @@ function main(_param: g.GameMainParameterObject): void {
 		{ ctor: segmentToBoxDemo, name: "Segment to Box" },
 		{ ctor: polygonToSegmentDemo, name: "Polygon to Segment" },
 		{ ctor: polygonToCircleDemo, name: "Polygon to Circle" },
-		{ ctor: vecToPolygonDemo, name: "Polygon to Vec"},
+		{ ctor: polygonToVecDemo, name: "Polygon to Vec" },
+		{ ctor :polygonToBoxDemo, name: "Polygon to Box" },
 		{ ctor: polygonToPolygonDemo, name: "Polygon to Polygon"}
 	];
 
