@@ -1021,6 +1021,38 @@ function polygonToBoxDemo(scene: g.Scene): g.E {
 	return root;
 }
 
+function polygonToAABBDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const halfExtend = { x: 64, y: 48 };
+	const center = new Vec2(halfExtend);
+	const aabb: co.AABB = {
+		min: center.clone().sub(halfExtend),
+		max: center.clone().add(halfExtend)
+	};
+	const aabbe = createAABBE(scene, aabb, "blue", true);
+
+	const p = createRegularPolygon(250, 250, 180, 5);
+	const pe = new PolygonE({
+		scene,
+		polygon: p,
+		cssColor: "green"
+	});
+
+	aabbe.pointMove.add(ev => {
+		Vec2.add(aabb.min, ev.prevDelta);
+		Vec2.add(aabb.max, ev.prevDelta);
+		Vec2.add(aabbe, ev.prevDelta);
+		aabbe.cssColor = co.polygonToAABB(p, aabb) ? "red" : "blue";
+		aabbe.modified();
+	});
+
+	root.append(pe);
+	root.append(aabbe);
+
+	return root;
+}
+
 function polygonToPolygonDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
 
@@ -1077,7 +1109,8 @@ function main(_param: g.GameMainParameterObject): void {
 		{ ctor: polygonToSegmentDemo, name: "Polygon to Segment" },
 		{ ctor: polygonToCircleDemo, name: "Polygon to Circle" },
 		{ ctor: polygonToVecDemo, name: "Polygon to Vec" },
-		{ ctor :polygonToBoxDemo, name: "Polygon to Box" },
+		{ ctor: polygonToBoxDemo, name: "Polygon to Box" },
+		{ ctor: polygonToAABBDemo, name: "Polygon to AABB" },
 		{ ctor: polygonToPolygonDemo, name: "Polygon to Polygon"}
 	];
 
