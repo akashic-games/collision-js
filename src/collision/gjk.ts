@@ -2,6 +2,7 @@ import { Vec2, Vec2Like } from "../math";
 import { Polygon } from "./Polygon";
 import { Segment } from "./Segment";
 import { Circle } from "./Circle";
+import { Box } from "./Box";
 
 function getFurthestVertex(vertices: Vec2Like[], dir: Vec2Like): Vec2Like {
     let furthest = Number.NEGATIVE_INFINITY;
@@ -52,7 +53,7 @@ export function supportSegment(s: Segment, dir: Vec2Like): Vec2Like {
  */
 export function supportCircle(c: Circle, _dir: Vec2Like): Vec2Like {
     const dir = new Vec2(_dir).normalize();
-     return getFurthestVertex([
+    return getFurthestVertex([
         new Vec2(dir).scale(c.radius).add(c.position),
         new Vec2(dir).scale(-c.radius).add(c.position),
     ], dir);
@@ -65,8 +66,30 @@ export function supportCircle(c: Circle, _dir: Vec2Like): Vec2Like {
  * @param dir 方向ベクトル。
  * @returns dirの方向にある最も遠い頂点。
  */
- export function supportVec(v: GJKShape, dir: Vec2Like): Vec2Like {
-     return v.position;
+export function supportVec(v: GJKShape, dir: Vec2Like): Vec2Like {
+    return v.position;
+}
+
+/**
+ * 矩形のサポート関数。
+ *
+ * @param b 矩形。
+ * @param dir 方向ベクトル。
+ * @returns dirの方向にある最も遠い頂点。
+ */
+export function supportBox(b: Box, dir: Vec2Like): Vec2Like {
+    const hx = b.halfExtend.x;
+    const hy = b.halfExtend.y;
+    const vertices = [
+        { x:  hx, y:  hy },
+        { x: -hx, y:  hy },
+        { x: -hx, y: -hy },
+        { x:  hx, y: -hy }
+    ];
+
+    const furthestVertex = getFurthestVertex(vertices, new Vec2(dir).rotate(-b.angle));
+
+    return new Vec2(furthestVertex).rotate(b.angle).add(b.position);
 }
 
 /**

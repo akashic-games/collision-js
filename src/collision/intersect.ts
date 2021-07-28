@@ -8,7 +8,8 @@ import { Contact } from "./Contact";
 import { Polygon } from "./Polygon";
 import {
     gjkTest,
-    supportCircle, supportPolygon, supportSegment, supportVec
+    supportCircle, supportPolygon, supportSegment, supportVec,
+    supportBox
 } from "./gjk";
 
 /**
@@ -713,11 +714,21 @@ export function polygonToSegment(p: Polygon, s: Segment): boolean {
 }
 
 /**
- * 多角形と線分の交差判定。
+ * 多角形と点の交差判定。
  *
  * @param p 多角形。
  * @param v 点の位置。
  */
  export function polygonToVec(p: Polygon, v: Vec2Like): boolean {
     return gjkTest(p, supportPolygon, { position: v }, supportVec);
+}
+
+/**
+ * 多角形と矩形の交差判定。
+ *
+ * @param p 多角形。
+ * @param b 矩形s。
+ */
+ export function polygonToBox(p: Polygon, b: Box): boolean {
+    return gjkTest(p, supportPolygon, b, supportBox);
 }
