@@ -9,7 +9,7 @@ import { Polygon } from "./Polygon";
 import {
     gjkTest,
     supportCircle, supportPolygon, supportSegment, supportVec,
-    supportBox
+    supportBox, supportAABB
 } from "./gjk";
 
 /**
@@ -731,4 +731,22 @@ export function polygonToSegment(p: Polygon, s: Segment): boolean {
  */
  export function polygonToBox(p: Polygon, b: Box): boolean {
     return gjkTest(p, supportPolygon, b, supportBox);
+}
+
+/**
+ * 多角形とAABBの交差判定。
+ *
+ * @param p 多角形。
+ * @param aabb AABB。
+ */
+export function polygonToAABB(p: Polygon, _aabb: AABB): boolean {
+    const aabb = {
+        min: _aabb.min,
+        max: _aabb.max,
+        position: {
+            x: (_aabb.max.x - _aabb.min.x) / 2,
+            y: (_aabb.max.y - _aabb.min.y) / 2
+        }
+    }
+    return gjkTest(p, supportPolygon, aabb, supportAABB);
 }

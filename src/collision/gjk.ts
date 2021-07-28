@@ -3,6 +3,7 @@ import { Polygon } from "./Polygon";
 import { Segment } from "./Segment";
 import { Circle } from "./Circle";
 import { Box } from "./Box";
+import { AABB } from "./AABB";
 
 function getFurthestVertex(vertices: Vec2Like[], dir: Vec2Like): Vec2Like {
     let furthest = Number.NEGATIVE_INFINITY;
@@ -81,15 +82,37 @@ export function supportBox(b: Box, dir: Vec2Like): Vec2Like {
     const hx = b.halfExtend.x;
     const hy = b.halfExtend.y;
     const vertices = [
-        { x:  hx, y:  hy },
-        { x: -hx, y:  hy },
+        { x: hx, y: hy },
+        { x: -hx, y: hy },
         { x: -hx, y: -hy },
-        { x:  hx, y: -hy }
+        { x: hx, y: -hy }
     ];
 
     const furthestVertex = getFurthestVertex(vertices, new Vec2(dir).rotate(-b.angle));
 
     return new Vec2(furthestVertex).rotate(b.angle).add(b.position);
+}
+
+/**
+ * AABBのサポート関数。
+ *
+ * @param aabb AABB。
+ * @param dir 方向ベクトル。
+ * @returns dirの方向にある最も遠い頂点。
+ */
+export function supportAABB(aabb: AABB, dir: Vec2Like): Vec2Like {
+    const minX = aabb.min.x;
+    const minY = aabb.min.y;
+    const maxX = aabb.max.x;
+    const maxY = aabb.max.y;
+    const vertices = [
+        { x: maxX, y: maxY },
+        { x: minX, y: maxY },
+        { x: minX, y: minY },
+        { x: maxX, y: minY },
+    ];
+
+    return getFurthestVertex(vertices, dir);
 }
 
 /**
