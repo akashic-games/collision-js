@@ -1053,6 +1053,35 @@ function polygonToAABBDemo(scene: g.Scene): g.E {
 	return root;
 }
 
+function polygonToLineDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const l: co.Line = {
+		position: { x: 0, y: 128 },
+		direction: { x: 1, y: -1 }
+	};
+	const le = createLineE(scene, l, "blue", true);
+
+	const p = createRegularPolygon(250, 250, 180, 5);
+	const pe = new PolygonE({
+		scene,
+		polygon: p,
+		cssColor: "green"
+	});
+
+	le.pointMove.add(ev => {
+		Vec2.add(l.position, ev.prevDelta);
+		Vec2.add(le, ev.prevDelta);
+		le.cssColor = co.polygonToLine(p, l) ? "red" : "blue";
+		le.modified();
+	});
+
+	root.append(pe);
+	root.append(le);
+
+	return root;
+}
+
 function polygonToPolygonDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
 
@@ -1111,6 +1140,7 @@ function main(_param: g.GameMainParameterObject): void {
 		{ ctor: polygonToVecDemo, name: "Polygon to Vec" },
 		{ ctor: polygonToBoxDemo, name: "Polygon to Box" },
 		{ ctor: polygonToAABBDemo, name: "Polygon to AABB" },
+		{ ctor: polygonToLineDemo, name: "Polygon to Line"},
 		{ ctor: polygonToPolygonDemo, name: "Polygon to Polygon"}
 	];
 
