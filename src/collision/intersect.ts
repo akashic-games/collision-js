@@ -750,3 +750,29 @@ export function polygonToAABB(p: Polygon, _aabb: AABB): boolean {
     }
     return gjkTest(p, supportPolygon, aabb, supportAABB);
 }
+
+/**
+ * 多角形と直線の交差判定。
+ *
+ * @param p 多角形。
+ * @param aabb AABB。
+ */
+export function polygonToLine(p: Polygon, line: Line): boolean {
+    const n = new Vec2(line.direction).rotate90();
+    const d = -n.dot(line.position);
+    const vertices = p.vertices;
+
+    const s0 = Math.sign(n.dot(vertices[0]) + d);
+    if (s0 === 0) {
+        return true;
+    }
+
+    for (let i = 1; i < vertices.length; i++) {
+        const s = Math.sign(n.dot(vertices[i]) + d);
+        if (s0 !== s) {
+            return true;
+        }
+    }
+
+    return false;
+}
