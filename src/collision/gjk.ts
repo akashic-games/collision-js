@@ -163,7 +163,7 @@ function addSupport<S1 extends GJKShape, S2 extends GJKShape>(
 
     vertices.push(support);
 
-    return Vec2.dot(direction, support) > 0;
+    return Vec2.dot(direction, support) >= 0;
 }
 
 /**
