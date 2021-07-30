@@ -689,7 +689,7 @@ export function segmentToBox(s: Segment, b: Box): boolean {
  * @param s1 多角形1。
  * @param b 多角形2。
  */
- export function polygonToPolygon(p1: Polygon, p2: Polygon): boolean {
+export function polygonToPolygon(p1: Polygon, p2: Polygon): boolean {
     return gjkTest(p1, supportPolygon, p2, supportPolygon);
 }
 
@@ -709,7 +709,7 @@ export function polygonToSegment(p: Polygon, s: Segment): boolean {
  * @param p 多角形。
  * @param s 線分。
  */
- export function polygonToCircle(p: Polygon, c: Circle): boolean {
+export function polygonToCircle(p: Polygon, c: Circle): boolean {
     return gjkTest(p, supportPolygon, c, supportCircle);
 }
 
@@ -719,7 +719,7 @@ export function polygonToSegment(p: Polygon, s: Segment): boolean {
  * @param p 多角形。
  * @param v 点の位置。
  */
- export function polygonToVec(p: Polygon, v: Vec2Like): boolean {
+export function polygonToVec(p: Polygon, v: Vec2Like): boolean {
     return gjkTest(p, supportPolygon, { position: v }, supportVec);
 }
 
@@ -729,7 +729,7 @@ export function polygonToSegment(p: Polygon, s: Segment): boolean {
  * @param p 多角形。
  * @param b 矩形s。
  */
- export function polygonToBox(p: Polygon, b: Box): boolean {
+export function polygonToBox(p: Polygon, b: Box): boolean {
     return gjkTest(p, supportPolygon, b, supportBox);
 }
 
