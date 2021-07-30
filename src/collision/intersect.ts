@@ -12,6 +12,11 @@ import {
     supportBox, supportAABB
 } from "./gjk";
 
+// https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/sign
+function sign(x: number): number {
+    return (((x > 0) as unknown as number) - ((x < 0) as unknown as number)) || +x;
+}
+
 /**
  * 平行判定。
  *
@@ -762,13 +767,13 @@ export function polygonToLine(p: Polygon, line: Line): boolean {
     const d = -n.dot(line.position);
     const vertices = p.vertices;
 
-    const s0 = Math.sign(n.dot(vertices[0]) + d);
+    const s0 = sign(n.dot(vertices[0]) + d);
     if (s0 === 0) {
         return true;
     }
 
     for (let i = 1; i < vertices.length; i++) {
-        const s = Math.sign(n.dot(vertices[i]) + d);
+        const s = sign(n.dot(vertices[i]) + d);
         if (s0 !== s) {
             return true;
         }
