@@ -217,6 +217,18 @@ export class Vec3 {
 	}
 
 	/**
+	 * アダマール積を求める。
+	 *
+	 * @param v ベクトル。
+	 */
+	 mul(v: Vec3Like): this {
+		this.x = this.x * v.x;
+		this.y = this.y * v.y;
+		this.z = this.z * v.z;
+		return this;
+	}
+
+	/**
 	 * 内積を求める。
 	 *
 	 * @param v ベクトル。
@@ -316,6 +328,46 @@ export class Vec3 {
 		this.x *= -1;
 		this.y *= -1;
 		this.z *= -1;
+		return this;
+	}
+
+	/**
+	 * 四捨五入する。
+	 */
+	 round(): this {
+		this.x = Math.round(this.x);
+		this.y = Math.round(this.y);
+		this.z = Math.round(this.z);
+		return this;
+	}
+
+	/**
+	 * 小数点以下を切り捨てる。
+	 */
+	floor(): this {
+		this.x = Math.floor(this.x);
+		this.y = Math.floor(this.y);
+		this.z = Math.floor(this.z);
+		return this;
+	}
+
+	/**
+	 * 小数点以下を切り上げる。
+	 */
+	ceil(): this {
+		this.x = Math.ceil(this.x);
+		this.y = Math.ceil(this.y);
+		this.z = Math.ceil(this.z);
+		return this;
+	}
+
+	/**
+	 * 各要素を符号を表す +/- 1, +/- 0 にする。
+	 */
+	sign(): this {
+		this.x = Math.sign(this.x);
+		this.y = Math.sign(this.y);
+		this.z = Math.sign(this.z);
 		return this;
 	}
 
