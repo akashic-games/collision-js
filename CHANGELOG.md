@@ -1,5 +1,9 @@
 # CHANGELOG.md
 
+## Unreleased changes
+
+- 多角形の衝突判定を追加。
+
 ## 1.0.1
 
 - ドキュメンテーションコメント中、角度の単位をradian出なくdegreeと誤って説明している箇所の修正。
