@@ -362,3 +362,254 @@ describe("segmentToBox", () => {
         )).toBeFalsy();
     });
 });
+
+describe("polygonToPolygon", () => {
+    it("detects collision between polygon and polygon", () => {
+        expect(collision.polygonToPolygon(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 1 },
+                    { x: 3, y: 3 },
+                    { x: 1, y: 3 }
+                ]
+            },
+            {
+                position: { x: 1, y: 2 / 3 },
+                vertices: [
+                    { x: 0, y: 0 },
+                    { x: 3, y: 0 },
+                    { x: 0, y: 2 }
+                ]
+            }
+        )).toBeTruthy();
+
+        expect(collision.polygonToPolygon(
+            {
+                position: { x: 3, y: 3 },
+                vertices: [
+                    { x: 2, y: 2 },
+                    { x: 4, y: 2 },
+                    { x: 4, y: 4 },
+                    { x: 2, y: 4 }
+                ]
+            },
+            {
+                position: { x: 1, y: 2 / 3 },
+                vertices: [
+                    { x: 0, y: 0 },
+                    { x: 3, y: 0 },
+                    { x: 0, y: 2 }
+                ]
+            }
+        )).toBeFalsy();
+    });
+});
+
+describe("polygonToSegment", () => {
+    it("detects collision between polygon and segment", () => {
+        expect(collision.polygonToSegment(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 3 }
+                ]
+            },
+            {
+                position: { x: 0, y: 3 },
+                endPosition: { x: 2, y: 2 }
+            }
+        )).toBeTruthy();
+
+        expect(collision.polygonToSegment(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 3 }
+                ]
+            },
+            {
+                position: { x: 0, y: 3 },
+                endPosition: { x: 1, y: 2 }
+            }
+        )).toBeFalsy();
+    });
+});
+
+describe("polygonToCircle", () => {
+    it("detects collision between polygon and circle", () => {
+        expect(collision.polygonToCircle(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 3 }
+                ]
+            },
+            {
+                position: { x: 4, y: 2 },
+                radius: 1.01
+            }
+        )).toBeTruthy();
+
+        expect(collision.polygonToCircle(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 3 }
+                ]
+            },
+            {
+                position: { x: 4, y: 2 },
+                radius: 0.99
+            }
+        )).toBeFalsy();
+    });
+});
+
+describe("polygonToVec", () => {
+    it("detects collision between polygon and vec", () => {
+        // expect(collision.polygonToVec(
+        //     {
+        //         position: { x: 2, y: 2 },
+        //         vertices: [
+        //             { x: 1, y: 1 },
+        //             { x: 3, y: 2 },
+        //             { x: 2, y: 3 }
+        //         ]
+        //     },
+        //     {
+        //         x: 2, y: 2
+        //     }
+        // )).toBeTruthy();
+
+        expect(collision.polygonToVec(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 3 }
+                ]
+            },
+            {
+                x: 1, y: 2
+            }
+        )).toBeFalsy();
+    });
+});
+
+describe("polygonToBox", () => {
+    it("detects collision between polygon and box", () => {
+        expect(collision.polygonToBox(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 3 }
+                ]
+            },
+            {
+                position: { x: 2, y: 2 },
+                halfExtend: { x: 0.5, y: 0.5 },
+                angle: Math.PI / 4
+            }
+        )).toBeTruthy();
+
+        expect(collision.polygonToBox(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 3 }
+                ]
+            },
+            {
+                position: { x: 3, y: 3 },
+                halfExtend: {
+                    x: 1 / Math.sqrt(2) * 0.9999,
+                    y: 1 / Math.sqrt(2) * 0.9999
+                },
+                angle: Math.PI / 4
+            }
+        )).toBeFalsy();
+    });
+});
+
+describe("polygonToAABB", () => {
+    it("detects collision between polygon and AABB", () => {
+        expect(collision.polygonToAABB(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 3 }
+                ]
+            },
+            {
+                min: { x: 2, y: 2 },
+                max: { x: 3, y: 3 }
+            }
+        )).toBeTruthy();
+
+        expect(collision.polygonToAABB(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 3 }
+                ]
+            },
+            {
+                min: { x: 3, y: 3 },
+                max: { x: 4, y: 4 }
+            }
+        )).toBeFalsy();
+    });
+});
+
+describe("polygonToLine", () => {
+    it("detects collision between polygon and line", () => {
+        expect(collision.polygonToLine(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 3 }
+                ]
+            },
+            {
+                position: { x: 0, y: 1 },
+                direction: { x: 3, y: 2 }
+            }
+        )).toBeTruthy();
+
+        expect(collision.polygonToLine(
+            {
+                position: { x: 2, y: 2 },
+                vertices: [
+                    { x: 1, y: 1 },
+                    { x: 3, y: 2 },
+                    { x: 2, y: 3 }
+                ]
+            },
+            {
+                position: { x: 0, y: 1 },
+                direction: { x: 1, y: 2 }
+            }
+        )).toBeFalsy();
+    });
+});
