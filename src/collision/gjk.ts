@@ -211,18 +211,18 @@ function evolveSimplex<S1 extends GJKShape, S2 extends GJKShape>(
         const ac = new Vec2(c).sub(a);
 
         const abPerp = new Vec2(tripleProduct(ac, ab, ab));
-        const acPerp = new Vec2(tripleProduct(ab, ac, ac));
 
         if (abPerp.dot(a0) > 0) {
-            // remove vertex c .
-            vertices.splice(0, 1);
+            vertices.splice(0, 1); // 頂点 c を削除。
             direction = abPerp;
-        } else if (acPerp.dot(a0) > 0) {
-            // remove vertex b .
-            vertices.splice(1, 1);
-            direction = acPerp;
         } else {
-            return "found";
+            const acPerp = new Vec2(tripleProduct(ab, ac, ac));
+            if (acPerp.dot(a0) > 0) {
+                vertices.splice(1, 1); // 頂点 b を削除。
+                direction = acPerp;
+            } else {
+                return "found";
+            }
         }
     } else {
         return "error";
