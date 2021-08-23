@@ -129,7 +129,7 @@ export function supportAABB(aabb: AABB, dir: Vec2Like): Vec2Like {
  * @param a ベクトル。
  * @param b ベクトル。
  * @param c ベクトル。
- * @returns
+ * @returns 三重積( a x b x c )。
  */
 function tripleProduct(a: Vec2Like, b: Vec2Like, c: Vec2Like): Vec2Like {
     const z = Vec2.cross(a, b);
@@ -255,7 +255,7 @@ export type SupportFn<S extends GJKShape> = (shape: S, direction: Vec2Like) => V
  * @param sup1
  * @param s2
  * @param sup2
- * @returns
+ * @returns 交差している時、真。
  */
 export function gjkTest<S1 extends GJKShape, S2 extends GJKShape>(
     s1: S1, sup1: SupportFn<S1>,
