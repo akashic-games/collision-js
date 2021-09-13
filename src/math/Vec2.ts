@@ -328,7 +328,7 @@ export class Vec2 {
 	}
 
 	/**
-	 * 角要素を符号を表す +/- 1, +/- 0 にする。
+	 * 各要素を符号を表す +/- 1, +/- 0 にする。
 	 */
 	sign(): this {
 		this.x = Math.sign(this.x);
