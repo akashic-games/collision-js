@@ -477,20 +477,6 @@ describe("polygonToCircle", () => {
 
 describe("polygonToVec", () => {
     it("detects collision between polygon and vec", () => {
-        // expect(collision.polygonToVec(
-        //     {
-        //         position: { x: 2, y: 2 },
-        //         vertices: [
-        //             { x: 1, y: 1 },
-        //             { x: 3, y: 2 },
-        //             { x: 2, y: 3 }
-        //         ]
-        //     },
-        //     {
-        //         x: 2, y: 2
-        //     }
-        // )).toBeTruthy();
-
         expect(collision.polygonToVec(
             {
                 position: { x: 2, y: 2 },

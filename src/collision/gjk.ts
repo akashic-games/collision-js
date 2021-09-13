@@ -143,8 +143,8 @@ function tripleProduct(a: Vec2Like, b: Vec2Like, c: Vec2Like): Vec2Like {
  * サポートのミンコフスキー差を求め結果を頂点配列に加える。
  *
  * @param s1 シェイプ１。
- * @param sup1 シェイプ２。
- * @param s2 シェイプ２のサポート関数。
+ * @param sup1 シェイプ１のサポート関数。
+ * @param s2 シェイプ２。
  * @param sup2 シェイプ２のサポート関数。
  * @param direction サポートを求める時の方向。
  * @param vertices 頂点配列。
