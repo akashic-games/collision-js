@@ -1014,7 +1014,6 @@ function polygonToBoxDemo(scene: g.Scene): g.E {
 		be.modified();
 	});
 
-
 	root.append(pe);
 	root.append(be);
 

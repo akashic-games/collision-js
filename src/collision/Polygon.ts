@@ -13,6 +13,6 @@ export interface Polygon {
      */
     position: Vec2Like;
 
-    /**多角形の頂点座標の配列。 */
+    /** 多角形の頂点座標の配列。 */
     vertices: Vec2Like[];
 }
