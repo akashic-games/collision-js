@@ -1,4 +1,5 @@
 import { Vec3Like } from "./Vec3Like";
+import { sign } from "../sign";
 
 /**
  * 3次元ベクトル。
@@ -365,9 +366,9 @@ export class Vec3 {
 	 * 各要素を符号を表す +/- 1, +/- 0 にする。
 	 */
 	sign(): this {
-		this.x = Math.sign(this.x);
-		this.y = Math.sign(this.y);
-		this.z = Math.sign(this.z);
+		this.x = sign(this.x);
+		this.y = sign(this.y);
+		this.z = sign(this.z);
 		return this;
 	}
 
