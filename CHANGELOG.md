@@ -1,6 +1,6 @@
 # CHANGELOG.md
 
-## Unreleased changes
+## 1.1.0
 
 - `Vec2`, `Vec3` クラスに `mul()`, `round()`, `floor()`, `ceil()`, `sign()` を追加。
 - es2015の型定義ファイルが誤って読み込まれることのないよう、コンパイラオプションを変更。
