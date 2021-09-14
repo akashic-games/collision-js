@@ -1,5 +1,5 @@
 import * as co from "@akashic-extension/collision-js";
-import { Vec2Like, Vec2 } from "@akashic-extension/collision-js";
+import { Vec2Like, Vec2, Polygon } from "@akashic-extension/collision-js";
 
 function drawLine(
 	renderer: g.Renderer, from: Vec2Like, to: Vec2Like, cssColor: string,
@@ -235,6 +235,71 @@ class GridE extends g.E {
 		}
 
 		return true;
+	}
+}
+
+interface PolygonEParameterObject extends g.EParameterObject {
+	polygon: Polygon;
+	cssColor: string;
+}
+
+class PolygonE extends g.E {
+	polygon: Polygon;
+	cssColor: string;
+
+	constructor(param: PolygonEParameterObject) {
+		const polygon = PolygonE.calcParam(param, param.polygon);
+
+		super(param);
+
+		this.polygon = polygon;
+		this.cssColor = param.cssColor;
+	}
+
+	renderSelf(renderer: g.Renderer, _camera?: g.Camera): boolean {
+
+		const vertices = this.polygon.vertices;
+		for (let i = 0; i < vertices.length; i++) {
+			const v1 = vertices[i];
+			const v2 = vertices[(i + 1) % vertices.length];
+			drawLine(renderer, v1, v2, this.cssColor, "inside");
+		}
+
+		return true;
+	}
+
+	private static calcParam(param: g.EParameterObject, srcPolygon: Polygon): Polygon {
+		const aabb: co.AABB = {
+			min: { x: 0, y: 0 },
+			max: { x: 0, y: 0 }
+		};
+
+		const srcVertices = srcPolygon.vertices;
+		for (let i = 0; i < srcVertices.length; i++) {
+			co.enlargeAABB(aabb, srcVertices[i]);
+		}
+
+		param.x = aabb.min.x;
+		param.y = aabb.min.y;
+		param.width = aabb.max.x - aabb.min.x;
+		param.height = aabb.max.y - aabb.min.y;
+
+		const position = {
+			x: srcPolygon.position.x - param.x,
+			y: srcPolygon.position.y - param.y,
+		};
+
+		const vertices = srcVertices.map(v => ({
+			x: v.x - param.x,
+			y: v.y - param.y
+		}));
+
+		const polygon: Polygon = {
+			position,
+			vertices
+		};
+
+		return polygon;
 	}
 }
 
@@ -807,6 +872,248 @@ function segmentToBoxDemo(scene: g.Scene): g.E {
 	return root;
 }
 
+function createRegularPolygon(cx: number, cy: number, r: number, n: number, wise: "cw" | "ccw" = "cw"): Polygon {
+
+	const position = { x: cx, y: cy };
+	const vertices: Vec2Like[] = [];
+	const da = Math.PI * 2 / n * (wise === "cw" ? 1 : -1);
+
+	for (let i = 0; i < n; i++) {
+		const th = -Math.PI / 2 + da * i;
+		const x = r * Math.cos(th) + cx;
+		const y = r * Math.sin(th) + cy;
+		vertices.push({ x, y });
+	}
+
+	return {
+		position,
+		vertices
+	};
+}
+
+function polygonToSegmentDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const s: co.Segment = {
+		position: { x: 8, y: 128 },
+		endPosition: { x: 128, y: 8 }
+	};
+	const se = createSegmentE(scene, s, "blue", true);
+
+	const p = createRegularPolygon(250, 250, 180, 5);
+	const pe = new PolygonE({
+		scene,
+		polygon: p,
+		cssColor: "green"
+	});
+
+	se.pointMove.add(ev => {
+		Vec2.add(s.position, ev.prevDelta);
+		Vec2.add(s.endPosition, ev.prevDelta);
+		Vec2.add(se, ev.prevDelta);
+		se.cssColor = co.polygonToSegment(p, s) ? "red" : "blue";
+		se.modified();
+	});
+
+	root.append(pe);
+	root.append(se);
+
+	return root;
+}
+
+function polygonToCircleDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const red = (scene.assets.red as g.ImageAsset).asSurface();
+	const blue = (scene.assets.blue as g.ImageAsset).asSurface();
+
+	const c: co.Circle = {
+		position: { x: 64, y: 64 },
+		radius: 64
+	};
+	const ce = createCircleE(scene, c, blue, true);
+
+	const p = createRegularPolygon(250, 250, 180, 5);
+	const pe = new PolygonE({
+		scene,
+		polygon: p,
+		cssColor: "green"
+	});
+
+	ce.pointMove.add(ev => {
+		Vec2.add(c.position, ev.prevDelta);
+		Vec2.add(ce, ev.prevDelta);
+		ce.surface = co.polygonToCircle(p, c) ? red : blue;
+		ce.invalidate();
+	});
+
+	root.append(pe);
+	root.append(ce);
+
+	return root;
+}
+
+function polygonToVecDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const v: Vec2Like = { x: 32, y: 32 };
+	const ve = new CrossCursorE({
+		scene,
+		x: v.x,
+		y: v.y,
+		width: 32,
+		height: 32,
+		anchorX: 0.5,
+		anchorY: 0.5,
+		cssColor: "blue",
+		touchable: true
+	});
+
+	const p = createRegularPolygon(250, 250, 180, 5);
+	const pe = new PolygonE({
+		scene,
+		polygon: p,
+		cssColor: "green"
+	});
+
+	ve.pointMove.add(ev => {
+		Vec2.add(ve, ev.prevDelta);
+		Vec2.add(v, ev.prevDelta);
+		ve.cssColor = co.polygonToVec(p, v) ? "red" : "blue";
+		ve.modified();
+	});
+
+	root.append(pe);
+	root.append(ve);
+
+	return root;
+}
+
+function polygonToBoxDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const b: co.Box = {
+		position: { x: 100, y: 100 },
+		halfExtend: { x: 64, y: 48 },
+		angle: -Math.PI / 6
+	};
+
+	const be = createBoxE(scene, b, "blue", true);
+
+	const p = createRegularPolygon(250, 250, 180, 5);
+	const pe = new PolygonE({
+		scene,
+		polygon: p,
+		cssColor: "green"
+	});
+
+	be.pointMove.add(ev => {
+		Vec2.add(b.position, ev.prevDelta);
+		Vec2.add(be, ev.prevDelta);
+		be.cssColor = co.polygonToBox(p, b) ? "red" : "blue";
+		be.modified();
+	});
+
+	root.append(pe);
+	root.append(be);
+
+	return root;
+}
+
+function polygonToAABBDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const halfExtend = { x: 64, y: 48 };
+	const center = new Vec2(halfExtend);
+	const aabb: co.AABB = {
+		min: center.clone().sub(halfExtend),
+		max: center.clone().add(halfExtend)
+	};
+	const aabbe = createAABBE(scene, aabb, "blue", true);
+
+	const p = createRegularPolygon(250, 250, 180, 5);
+	const pe = new PolygonE({
+		scene,
+		polygon: p,
+		cssColor: "green"
+	});
+
+	aabbe.pointMove.add(ev => {
+		Vec2.add(aabb.min, ev.prevDelta);
+		Vec2.add(aabb.max, ev.prevDelta);
+		Vec2.add(aabbe, ev.prevDelta);
+		aabbe.cssColor = co.polygonToAABB(p, aabb) ? "red" : "blue";
+		aabbe.modified();
+	});
+
+	root.append(pe);
+	root.append(aabbe);
+
+	return root;
+}
+
+function polygonToLineDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const l: co.Line = {
+		position: { x: 0, y: 128 },
+		direction: { x: 1, y: -1 }
+	};
+	const le = createLineE(scene, l, "blue", true);
+
+	const p = createRegularPolygon(250, 250, 180, 5);
+	const pe = new PolygonE({
+		scene,
+		polygon: p,
+		cssColor: "green"
+	});
+
+	le.pointMove.add(ev => {
+		Vec2.add(l.position, ev.prevDelta);
+		Vec2.add(le, ev.prevDelta);
+		le.cssColor = co.polygonToLine(p, l) ? "red" : "blue";
+		le.modified();
+	});
+
+	root.append(pe);
+	root.append(le);
+
+	return root;
+}
+
+function polygonToPolygonDemo(scene: g.Scene): g.E {
+	const root = new g.E({ scene });
+
+	const p1 = createRegularPolygon(250, 250, 180, 5);
+	const p2 = createRegularPolygon(50, 50, 50, 3, "ccw");
+
+	const p1e = new PolygonE({
+		scene,
+		polygon: p1,
+		cssColor: "green"
+	});
+	const p2e = new PolygonE({
+		scene,
+		polygon: p2,
+		cssColor: "blue",
+		touchable: true
+	});
+
+	p2e.pointMove.add(ev => {
+		Vec2.add(p2.position, ev.prevDelta);
+		p2.vertices.forEach(v => Vec2.add(v, ev.prevDelta));
+
+		Vec2.add(p2e, ev.prevDelta);
+		p2e.cssColor = co.polygonToPolygon(p1, p2) ? "red" : "blue";
+		p2e.modified();
+	});
+
+	root.append(p1e);
+	root.append(p2e);
+
+	return root;
+}
+
 function main(_param: g.GameMainParameterObject): void {
 	const demos = [
 		{ ctor: aabbToAABBDemo, name: "AABB to AABB" },
@@ -826,7 +1133,14 @@ function main(_param: g.GameMainParameterObject): void {
 		{ ctor: vecToBoxDemo, name: "Vec to Box" },
 		{ ctor: lineToSegmentDemo, name: "Line to Segment" },
 		{ ctor: lineToBoxDemo, name: "Line to Box" },
-		{ ctor: segmentToBoxDemo, name: "Segment to Box" }
+		{ ctor: segmentToBoxDemo, name: "Segment to Box" },
+		{ ctor: polygonToSegmentDemo, name: "Polygon to Segment" },
+		{ ctor: polygonToCircleDemo, name: "Polygon to Circle" },
+		{ ctor: polygonToVecDemo, name: "Polygon to Vec" },
+		{ ctor: polygonToBoxDemo, name: "Polygon to Box" },
+		{ ctor: polygonToAABBDemo, name: "Polygon to AABB" },
+		{ ctor: polygonToLineDemo, name: "Polygon to Line"},
+		{ ctor: polygonToPolygonDemo, name: "Polygon to Polygon"}
 	];
 
 	const scene = new g.Scene({
@@ -848,7 +1162,7 @@ function main(_param: g.GameMainParameterObject): void {
 		const font = new g.DynamicFont({
 			game: g.game,
 			fontFamily: g.FontFamily.Monospace,
-			size: 16,
+			size: 14,
 		});
 		const demoRoot = new g.E({ scene });
 		const btnGroup = new g.E({
@@ -914,7 +1228,7 @@ function main(_param: g.GameMainParameterObject): void {
 				scene,
 				y: btnY,
 				width: btnWidth,
-				height: 20,
+				height: 16,
 				cssColor: idx === 0 ? btnActiveAcolor : btnInactiveColor,
 				touchable: true
 			});

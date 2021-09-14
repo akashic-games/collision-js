@@ -46,8 +46,10 @@
 		"node_modules/@akashic-extension/collision-js/lib/collision/AABB.js",
 		"node_modules/@akashic-extension/collision-js/lib/collision/Box.js",
 		"node_modules/@akashic-extension/collision-js/lib/collision/intersect.js",
+		"node_modules/@akashic-extension/collision-js/lib/collision/gjk.js",
 		"node_modules/@akashic-extension/collision-js/lib/collision/Circle.js",
 		"node_modules/@akashic-extension/collision-js/lib/collision/Segment.js",
+		"node_modules/@akashic-extension/collision-js/lib/collision/Polygon.js",
 		"node_modules/@akashic-extension/collision-js/lib/collision/Contact.js",
 		"node_modules/@akashic-extension/collision-js/lib/collision/index.js",
 		"node_modules/@akashic-extension/collision-js/package.json"

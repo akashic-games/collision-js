@@ -5,6 +5,17 @@ import { Circle } from "./Circle";
 import { Line } from "./Line";
 import { Segment } from "./Segment";
 import { Contact } from "./Contact";
+import { Polygon } from "./Polygon";
+import {
+    gjkTest,
+    supportCircle, supportPolygon, supportSegment, supportVec,
+    supportBox, supportAABB
+} from "./gjk";
+
+// https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/sign
+function sign(x: number): number {
+    return (((x > 0) as unknown as number) - ((x < 0) as unknown as number)) || +x;
+}
 
 /**
  * 平行判定。
@@ -675,4 +686,98 @@ export function segmentToBox(s: Segment, b: Box): boolean {
         endPosition: new Vec2(s.endPosition).sub(b.position).rotate(-b.angle)
     }
     return aabbToSegment(aabb, sl);
+}
+
+/**
+ * 多角形と多角形の交差判定。
+ *
+ * @param p1 多角形1。３頂点以上の凸多角形でなければならない。
+ * @param p2 多角形2。３頂点以上の凸多角形でなければならない。
+ */
+export function polygonToPolygon(p1: Polygon, p2: Polygon): boolean {
+    return gjkTest(p1, supportPolygon, p2, supportPolygon);
+}
+
+/**
+ * 多角形と線分の交差判定。
+ *
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
+ * @param s 線分。
+ */
+export function polygonToSegment(p: Polygon, s: Segment): boolean {
+    return gjkTest(p, supportPolygon, s, supportSegment);
+}
+
+/**
+ * 多角形と円の交差判定。
+ *
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
+ * @param c 円。
+ */
+export function polygonToCircle(p: Polygon, c: Circle): boolean {
+    return gjkTest(p, supportPolygon, c, supportCircle);
+}
+
+/**
+ * 多角形と点の交差判定。
+ *
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
+ * @param v 点の位置。
+ */
+export function polygonToVec(p: Polygon, v: Vec2Like): boolean {
+    return gjkTest(p, supportPolygon, { position: v }, supportVec);
+}
+
+/**
+ * 多角形と矩形の交差判定。
+ *
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
+ * @param b 矩形s。
+ */
+export function polygonToBox(p: Polygon, b: Box): boolean {
+    return gjkTest(p, supportPolygon, b, supportBox);
+}
+
+/**
+ * 多角形とAABBの交差判定。
+ *
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
+ * @param aabb AABB。
+ */
+export function polygonToAABB(p: Polygon, _aabb: AABB): boolean {
+    const aabb = {
+        min: _aabb.min,
+        max: _aabb.max,
+        position: {
+            x: (_aabb.max.x - _aabb.min.x) / 2,
+            y: (_aabb.max.y - _aabb.min.y) / 2
+        }
+    }
+    return gjkTest(p, supportPolygon, aabb, supportAABB);
+}
+
+/**
+ * 多角形と直線の交差判定。
+ *
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
+ * @param aabb AABB。
+ */
+export function polygonToLine(p: Polygon, line: Line): boolean {
+    const n = new Vec2(line.direction).rotate90();
+    const d = -n.dot(line.position);
+    const vertices = p.vertices;
+
+    const s0 = sign(n.dot(vertices[0]) + d);
+    if (s0 === 0) {
+        return true;
+    }
+
+    for (let i = 1; i < vertices.length; i++) {
+        const s = sign(n.dot(vertices[i]) + d);
+        if (s0 !== s) {
+            return true;
+        }
+    }
+
+    return false;
 }
