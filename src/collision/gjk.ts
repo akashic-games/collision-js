@@ -251,10 +251,10 @@ export type SupportFn<S extends GJKShape> = (shape: S, direction: Vec2Like) => V
 /**
  * GJKによる交差判定。
  *
- * @param s1
- * @param sup1
- * @param s2
- * @param sup2
+ * @param s1 シェイプ1。
+ * @param sup1 シェイプ1のサポート関数。
+ * @param s2 シェイプ2。
+ * @param sup2 シェイプ2のサポート関数。
  * @returns 交差している時、真。
  */
 export function gjkTest<S1 extends GJKShape, S2 extends GJKShape>(

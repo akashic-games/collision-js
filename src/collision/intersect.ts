@@ -691,8 +691,8 @@ export function segmentToBox(s: Segment, b: Box): boolean {
 /**
  * 多角形と多角形の交差判定。
  *
- * @param s1 多角形1。
- * @param b 多角形2。
+ * @param p1 多角形1。３頂点以上の凸多角形でなければならない。
+ * @param p2 多角形2。３頂点以上の凸多角形でなければならない。
  */
 export function polygonToPolygon(p1: Polygon, p2: Polygon): boolean {
     return gjkTest(p1, supportPolygon, p2, supportPolygon);
@@ -701,7 +701,7 @@ export function polygonToPolygon(p1: Polygon, p2: Polygon): boolean {
 /**
  * 多角形と線分の交差判定。
  *
- * @param p 多角形。
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
  * @param s 線分。
  */
 export function polygonToSegment(p: Polygon, s: Segment): boolean {
@@ -709,10 +709,10 @@ export function polygonToSegment(p: Polygon, s: Segment): boolean {
 }
 
 /**
- * 多角形と線分の交差判定。
+ * 多角形と円の交差判定。
  *
- * @param p 多角形。
- * @param s 線分。
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
+ * @param c 円。
  */
 export function polygonToCircle(p: Polygon, c: Circle): boolean {
     return gjkTest(p, supportPolygon, c, supportCircle);
@@ -721,7 +721,7 @@ export function polygonToCircle(p: Polygon, c: Circle): boolean {
 /**
  * 多角形と点の交差判定。
  *
- * @param p 多角形。
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
  * @param v 点の位置。
  */
 export function polygonToVec(p: Polygon, v: Vec2Like): boolean {
@@ -731,7 +731,7 @@ export function polygonToVec(p: Polygon, v: Vec2Like): boolean {
 /**
  * 多角形と矩形の交差判定。
  *
- * @param p 多角形。
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
  * @param b 矩形s。
  */
 export function polygonToBox(p: Polygon, b: Box): boolean {
@@ -741,7 +741,7 @@ export function polygonToBox(p: Polygon, b: Box): boolean {
 /**
  * 多角形とAABBの交差判定。
  *
- * @param p 多角形。
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
  * @param aabb AABB。
  */
 export function polygonToAABB(p: Polygon, _aabb: AABB): boolean {
@@ -759,7 +759,7 @@ export function polygonToAABB(p: Polygon, _aabb: AABB): boolean {
 /**
  * 多角形と直線の交差判定。
  *
- * @param p 多角形。
+ * @param p 多角形。３頂点以上の凸多角形でなければならない。
  * @param aabb AABB。
  */
 export function polygonToLine(p: Polygon, line: Line): boolean {

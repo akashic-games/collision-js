@@ -2,8 +2,6 @@ import { Vec2Like } from "../math";
 
 /**
  * 多角形。
- *
- * 凸多角形の交差判定のみサポートする。
  */
 export interface Polygon {
     /**
