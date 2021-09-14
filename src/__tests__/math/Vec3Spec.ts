@@ -89,6 +89,14 @@ describe("Vec3", () => {
         expect(v.z).toEqual(6);
     });
 
+    it("muls", () => {
+        const v = new Vec3(1, 2, 3);
+        v.mul({ x: 4, y: -5, z: 6 });
+        expect(v.x).toEqual(4);
+        expect(v.y).toEqual(-10);
+        expect(v.z).toEqual(18);
+    });
+
     it("dots", () => {
         const v = new Vec3(1, 2, 3);
         expect(v.dot({ x: 2, y: 4, z: 6 })).toEqual(28);
@@ -137,12 +145,44 @@ describe("Vec3", () => {
         expect(v.z).toEqual(4 / 6);
     });
 
-    it("negate", () => {
+    it("negates", () => {
         const v = new Vec3(3, -4, 5);
         v.negate();
         expect(v.x).toEqual(-3);
         expect(v.y).toEqual(4);
         expect(v.z).toEqual(-5);
+    });
+
+    it("rounds", () => {
+        const v = new Vec3(2.4, -4.7, 1.5);
+        v.round();
+        expect(v.x).toEqual(2);
+        expect(v.y).toEqual(-5);
+        expect(v.z).toEqual(2);
+    });
+
+    it("floors", () => {
+        const v = new Vec3(2.4, -4.7, 1.5);
+        v.floor();
+        expect(v.x).toEqual(2);
+        expect(v.y).toEqual(-5);
+        expect(v.z).toEqual(1);
+    });
+
+    it("ceils", () => {
+        const v = new Vec3(2.4, -4.7, 1.5);
+        v.ceil();
+        expect(v.x).toEqual(3);
+        expect(v.y).toEqual(-4);
+        expect(v.z).toEqual(2);
+    });
+
+    it("signs", () => {
+        const v = new Vec3(2.4, -2.4, -0);
+        v.sign();
+        expect(v.x).toEqual(1);
+        expect(v.y).toEqual(-1);
+        expect(v.z).toEqual(-0);
     });
 
     it("rotates about X asis", () => {
