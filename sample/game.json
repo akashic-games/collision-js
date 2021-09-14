@@ -42,6 +42,7 @@
 		"node_modules/@akashic-extension/collision-js/lib/math/Vec2Like.js",
 		"node_modules/@akashic-extension/collision-js/lib/math/Mat33.js",
 		"node_modules/@akashic-extension/collision-js/lib/index.js",
+		"node_modules/@akashic-extension/collision-js/lib/sign.js",
 		"node_modules/@akashic-extension/collision-js/lib/collision/Line.js",
 		"node_modules/@akashic-extension/collision-js/lib/collision/AABB.js",
 		"node_modules/@akashic-extension/collision-js/lib/collision/Box.js",

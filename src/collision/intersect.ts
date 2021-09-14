@@ -1,21 +1,15 @@
-import { Vec2, Vec2Like, clamp, overlap } from "../math";
+import { clamp, overlap, Vec2, Vec2Like } from "../math";
+import { sign } from "../sign";
 import { AABB } from "./AABB";
 import { Box } from "./Box";
 import { Circle } from "./Circle";
-import { Line } from "./Line";
-import { Segment } from "./Segment";
 import { Contact } from "./Contact";
-import { Polygon } from "./Polygon";
 import {
-    gjkTest,
-    supportCircle, supportPolygon, supportSegment, supportVec,
-    supportBox, supportAABB
+    gjkTest, supportAABB, supportBox, supportCircle, supportPolygon, supportSegment, supportVec
 } from "./gjk";
-
-// https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/sign
-function sign(x: number): number {
-    return (((x > 0) as unknown as number) - ((x < 0) as unknown as number)) || +x;
-}
+import { Line } from "./Line";
+import { Polygon } from "./Polygon";
+import { Segment } from "./Segment";
 
 /**
  * 平行判定。
