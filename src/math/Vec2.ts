@@ -1,4 +1,5 @@
 import { Vec2Like } from "./Vec2Like";
+import { sign } from "../sign";
 
 /**
  * 2次元ベクトル。
@@ -331,8 +332,8 @@ export class Vec2 {
 	 * 各要素を符号を表す +/- 1, +/- 0 にする。
 	 */
 	sign(): this {
-		this.x = Math.sign(this.x);
-		this.y = Math.sign(this.y);
+		this.x = sign(this.x);
+		this.y = sign(this.y);
 		return this;
 	}
 
