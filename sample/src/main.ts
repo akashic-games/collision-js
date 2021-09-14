@@ -872,14 +872,14 @@ function segmentToBoxDemo(scene: g.Scene): g.E {
 	return root;
 }
 
-function createRegularPolygon(cx: number, cy: number, r: number, n: number): Polygon {
+function createRegularPolygon(cx: number, cy: number, r: number, n: number, wise: "cw" | "ccw" = "cw"): Polygon {
 
 	const position = { x: cx, y: cy };
 	const vertices: Vec2Like[] = [];
-	const da = Math.PI * 2 / n;
+	const da = Math.PI * 2 / n * (wise === "cw" ? 1 : -1);
 
 	for (let i = 0; i < n; i++) {
-		const th = -(da * i + Math.PI / 2);
+		const th = -Math.PI / 2 + da * i;
 		const x = r * Math.cos(th) + cx;
 		const y = r * Math.sin(th) + cy;
 		vertices.push({ x, y });
@@ -1085,7 +1085,7 @@ function polygonToPolygonDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
 
 	const p1 = createRegularPolygon(250, 250, 180, 5);
-	const p2 = createRegularPolygon(50, 50, 50, 3);
+	const p2 = createRegularPolygon(50, 50, 50, 3, "ccw");
 
 	const p1e = new PolygonE({
 		scene,
@@ -1162,7 +1162,7 @@ function main(_param: g.GameMainParameterObject): void {
 		const font = new g.DynamicFont({
 			game: g.game,
 			fontFamily: g.FontFamily.Monospace,
-			size: 16,
+			size: 14,
 		});
 		const demoRoot = new g.E({ scene });
 		const btnGroup = new g.E({
@@ -1228,7 +1228,7 @@ function main(_param: g.GameMainParameterObject): void {
 				scene,
 				y: btnY,
 				width: btnWidth,
-				height: 20,
+				height: 16,
 				cssColor: idx === 0 ? btnActiveAcolor : btnInactiveColor,
 				touchable: true
 			});
