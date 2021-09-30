@@ -30,7 +30,7 @@
 	},
 	"moduleMainScripts": {},
 	"environment": {
-		"sandbox-runtime": "2"
+		"sandbox-runtime": "3"
 	},
 	"globalScripts": [
 		"node_modules/@akashic-extension/collision-js/lib/math/Vec2.js",

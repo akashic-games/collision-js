@@ -58,7 +58,7 @@ function aabbToAABBDemo(scene: g.Scene): g.E {
 	const aabbe1 = createAABBE(scene, aabb1, "green");
 	const aabbe2 = createAABBE(scene, aabb2, "blue", true);
 
-	aabbe2.pointMove.add(ev => {
+	aabbe2.onPointMove.add(ev => {
 		Vec2.add(aabb2.min, ev.prevDelta);
 		Vec2.add(aabb2.max, ev.prevDelta);
 		Vec2.add(aabbe2, ev.prevDelta);
@@ -305,9 +305,9 @@ class PolygonE extends g.E {
 
 function circleToCircleDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
-	const red = (scene.assets.red as g.ImageAsset).asSurface();
-	const green = (scene.assets.green as g.ImageAsset).asSurface();
-	const blue = (scene.assets.blue as g.ImageAsset).asSurface();
+	const red = scene.asset.getImageById("red").asSurface();
+	const green = scene.asset.getImageById("green").asSurface();
+	const blue = scene.asset.getImageById("blue").asSurface();
 
 	const c1: co.Circle = {
 		position: { x: g.game.width / 2, y: g.game.height / 2 },
@@ -322,11 +322,11 @@ function circleToCircleDemo(scene: g.Scene): g.E {
 	const ce1 = createCircleE(scene, c1, green);
 	const ce2 = createCircleE(scene, c2, blue, true);
 
-	ce2.pointMove.add(ev => {
+	ce2.onPointMove.add(ev => {
 		Vec2.add(c2.position, ev.prevDelta);
 		Vec2.add(ce2, ev.prevDelta);
-		ce2.surface = co.circleToCircle(c1, c2) ? red : blue;
-		ce2.modified();
+		ce2.src = co.circleToCircle(c1, c2) ? red : blue;
+		ce2.invalidate();
 	});
 
 	root.append(ce1);
@@ -337,9 +337,9 @@ function circleToCircleDemo(scene: g.Scene): g.E {
 
 function circleToCircleContactDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
-	const red = (scene.assets.red as g.ImageAsset).asSurface();
-	const green = (scene.assets.green as g.ImageAsset).asSurface();
-	const blue = (scene.assets.blue as g.ImageAsset).asSurface();
+	const red = scene.asset.getImageById("red").asSurface();
+	const green = scene.asset.getImageById("green").asSurface();
+	const blue = scene.asset.getImageById("blue").asSurface();
 
 	const c1: co.Circle = {
 		position: { x: g.game.width / 2, y: g.game.height / 2 },
@@ -355,12 +355,12 @@ function circleToCircleContactDemo(scene: g.Scene): g.E {
 	const ce2 = createCircleE(scene, c2, blue, true);
 
 	let contactE: ContactE = null;
-	ce2.pointMove.add(ev => {
+	ce2.onPointMove.add(ev => {
 		Vec2.add(c2.position, ev.prevDelta);
 		Vec2.add(ce2, ev.prevDelta);
 		const contact = co.circleToCircleContact(c1, c2);
-		ce2.surface = contact ? red : blue;
-		ce2.modified();
+		ce2.src = contact ? red : blue;
+		ce2.invalidate();
 
 		if (contact) {
 			if (contactE) {
@@ -399,7 +399,7 @@ function segmentToSegmentDemo(scene: g.Scene): g.E {
 	const s1e = createSegmentE(scene, s1, "green");
 	const s2e = createSegmentE(scene, s2, "blue", true);
 
-	s2e.pointMove.add(ev => {
+	s2e.onPointMove.add(ev => {
 		Vec2.add(s2.position, ev.prevDelta);
 		Vec2.add(s2.endPosition, ev.prevDelta);
 		Vec2.add(s2e, ev.prevDelta);
@@ -432,7 +432,7 @@ function boxToBoxDemo(scene: g.Scene): g.E {
 	const b1e = createBoxE(scene, b1, "green");
 	const b2e = createBoxE(scene, b2, "blue", true);
 
-	b2e.pointMove.add(ev => {
+	b2e.onPointMove.add(ev => {
 		Vec2.add(b2.position, ev.prevDelta);
 		Vec2.add(b2e, ev.prevDelta);
 		b2e.cssColor = co.boxToBox(b1, b2) ? "red" : "blue";
@@ -447,8 +447,8 @@ function boxToBoxDemo(scene: g.Scene): g.E {
 
 function circleToVecDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
-	const red = (scene.assets.red as g.ImageAsset).asSurface();
-	const blue = (scene.assets.blue as g.ImageAsset).asSurface();
+	const red = scene.asset.getImageById("red").asSurface();
+	const blue = scene.asset.getImageById("blue").asSurface();
 
 	const v = { x: g.game.width / 2, y: g.game.height / 2 };
 	const c: co.Circle = {
@@ -468,10 +468,10 @@ function circleToVecDemo(scene: g.Scene): g.E {
 	});
 	const ce = createCircleE(scene, c, blue, true);
 
-	ce.pointMove.add(ev => {
+	ce.onPointMove.add(ev => {
 		Vec2.add(ce, ev.prevDelta);
 		Vec2.add(c.position, ev.prevDelta);
-		ce.surface = co.circleToVec(c, v) ? red : blue;
+		ce.src = co.circleToVec(c, v) ? red : blue;
 		ce.invalidate();
 	});
 
@@ -483,8 +483,8 @@ function circleToVecDemo(scene: g.Scene): g.E {
 
 function circleToLineDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
-	const red = (scene.assets.red as g.ImageAsset).asSurface();
-	const blue = (scene.assets.blue as g.ImageAsset).asSurface();
+	const red = scene.asset.getImageById("red").asSurface();
+	const blue = scene.asset.getImageById("blue").asSurface();
 
 	const l: co.Line = {
 		position: { x: g.game.width / 2, y: g.game.height / 2 },
@@ -498,10 +498,10 @@ function circleToLineDemo(scene: g.Scene): g.E {
 	const le = createLineE(scene, l, "green");
 	const ce = createCircleE(scene, c, blue, true);
 
-	ce.pointMove.add(ev => {
+	ce.onPointMove.add(ev => {
 		Vec2.add(ce, ev.prevDelta);
 		Vec2.add(c.position, ev.prevDelta);
-		ce.surface = co.circleToLine(c, l) ? red : blue;
+		ce.src = co.circleToLine(c, l) ? red : blue;
 		ce.invalidate();
 	});
 
@@ -513,8 +513,8 @@ function circleToLineDemo(scene: g.Scene): g.E {
 
 function circleToSegmentDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
-	const red = (scene.assets.red as g.ImageAsset).asSurface();
-	const blue = (scene.assets.blue as g.ImageAsset).asSurface();
+	const red = scene.asset.getImageById("red").asSurface();
+	const blue = scene.asset.getImageById("blue").asSurface();
 
 	const c: co.Circle = {
 		position: { x: 64, y: 64 },
@@ -531,10 +531,10 @@ function circleToSegmentDemo(scene: g.Scene): g.E {
 	const se = createSegmentE(scene, s, "green");
 	const ce = createCircleE(scene, c, blue, true);
 
-	ce.pointMove.add(ev => {
+	ce.onPointMove.add(ev => {
 		Vec2.add(c.position, ev.prevDelta);
 		Vec2.add(ce, ev.prevDelta);
-		ce.surface = co.circleToSegment(c, s) ? red : blue;
+		ce.src = co.circleToSegment(c, s) ? red : blue;
 		ce.invalidate();
 	});
 
@@ -546,8 +546,8 @@ function circleToSegmentDemo(scene: g.Scene): g.E {
 
 function circleToAABBDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
-	const red = (scene.assets.red as g.ImageAsset).asSurface();
-	const blue = (scene.assets.blue as g.ImageAsset).asSurface();
+	const red = scene.asset.getImageById("red").asSurface();
+	const blue = scene.asset.getImageById("blue").asSurface();
 
 	const halfExtend = { x: 64, y: 48 };
 	const center = new Vec2(g.game.width / 2, g.game.height / 2);
@@ -563,10 +563,10 @@ function circleToAABBDemo(scene: g.Scene): g.E {
 	const aabbe = createAABBE(scene, aabb, "green");
 	const ce = createCircleE(scene, c, blue, true);
 
-	ce.pointMove.add(ev => {
+	ce.onPointMove.add(ev => {
 		Vec2.add(c.position, ev.prevDelta);
 		Vec2.add(ce, ev.prevDelta);
-		ce.surface = co.circleToAABB(c, aabb) ? red : blue;
+		ce.src = co.circleToAABB(c, aabb) ? red : blue;
 		ce.invalidate();
 	});
 
@@ -578,8 +578,8 @@ function circleToAABBDemo(scene: g.Scene): g.E {
 
 function circleToBoxDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
-	const red = (scene.assets.red as g.ImageAsset).asSurface();
-	const blue = (scene.assets.blue as g.ImageAsset).asSurface();
+	const red = scene.asset.getImageById("red").asSurface();
+	const blue = scene.asset.getImageById("blue").asSurface();
 
 	const c: co.Circle = {
 		position: { x: 64, y: 64 },
@@ -595,10 +595,10 @@ function circleToBoxDemo(scene: g.Scene): g.E {
 	const be = createBoxE(scene, b, "green");
 	const ce = createCircleE(scene, c, blue, true);
 
-	ce.pointMove.add(ev => {
+	ce.onPointMove.add(ev => {
 		Vec2.add(c.position, ev.prevDelta);
 		Vec2.add(ce, ev.prevDelta);
-		ce.surface = co.circleToBox(c, b) ? red : blue;
+		ce.src = co.circleToBox(c, b) ? red : blue;
 		ce.invalidate();
 	});
 
@@ -631,7 +631,7 @@ function aabbToVecDemo(scene: g.Scene): g.E {
 	});
 	const aabbe = createAABBE(scene, aabb, "blue", true);
 
-	aabbe.pointMove.add(ev => {
+	aabbe.onPointMove.add(ev => {
 		Vec2.add(aabb.min, ev.prevDelta);
 		Vec2.add(aabb.max, ev.prevDelta);
 		Vec2.add(aabbe, ev.prevDelta);
@@ -663,7 +663,7 @@ function aabbToLineDemo(scene: g.Scene): g.E {
 	const le = createLineE(scene, l, "green");
 	const aabbe = createAABBE(scene, aabb, "blue", true);
 
-	aabbe.pointMove.add(ev => {
+	aabbe.onPointMove.add(ev => {
 		Vec2.add(aabb.min, ev.prevDelta);
 		Vec2.add(aabb.max, ev.prevDelta);
 		Vec2.add(aabbe, ev.prevDelta);
@@ -697,7 +697,7 @@ function aabbToSegmentDemo(scene: g.Scene): g.E {
 	const se = createSegmentE(scene, s, "green");
 	const aabbe = createAABBE(scene, aabb, "blue", true);
 
-	aabbe.pointMove.add(ev => {
+	aabbe.onPointMove.add(ev => {
 		Vec2.add(aabb.min, ev.prevDelta);
 		Vec2.add(aabb.max, ev.prevDelta);
 		Vec2.add(aabbe, ev.prevDelta);
@@ -730,7 +730,7 @@ function aabbToBoxDemo(scene: g.Scene): g.E {
 	const be = createBoxE(scene, b, "green");
 	const aabbe = createAABBE(scene, aabb, "blue", true);
 
-	aabbe.pointMove.add(ev => {
+	aabbe.onPointMove.add(ev => {
 		Vec2.add(aabb.min, ev.prevDelta);
 		Vec2.add(aabb.max, ev.prevDelta);
 		Vec2.add(aabbe, ev.prevDelta);
@@ -769,7 +769,7 @@ function vecToBoxDemo(scene: g.Scene): g.E {
 		touchable: true
 	});
 
-	ve.pointMove.add(ev => {
+	ve.onPointMove.add(ev => {
 		Vec2.add(ve, ev.prevDelta);
 		Vec2.add(v, ev.prevDelta);
 		ve.cssColor = co.vecToBox(v, b) ? "red" : "blue";
@@ -787,7 +787,7 @@ function lineToSegmentDemo(scene: g.Scene): g.E {
 
 	const s: co.Segment = {
 		position: { x: 192, y: 192 },
-		endPosition: { x: g.game.width - 192, y:　g.game.height - 192 }
+		endPosition: { x: g.game.width - 192, y: g.game.height - 192 }
 	};
 
 	const l: co.Line = {
@@ -798,7 +798,7 @@ function lineToSegmentDemo(scene: g.Scene): g.E {
 	const se = createSegmentE(scene, s, "green");
 	const le = createLineE(scene, l, "blue", true);
 
-	le.pointMove.add(ev => {
+	le.onPointMove.add(ev => {
 		Vec2.add(l.position, ev.prevDelta);
 		Vec2.add(le, ev.prevDelta);
 		le.cssColor = co.lineToSegment(l, s) ? "red" : "blue";
@@ -828,7 +828,7 @@ function lineToBoxDemo(scene: g.Scene): g.E {
 	const be = createBoxE(scene, b, "green");
 	const le = createLineE(scene, l, "blue", true);
 
-	le.pointMove.add(ev => {
+	le.onPointMove.add(ev => {
 		Vec2.add(l.position, ev.prevDelta);
 		Vec2.add(le, ev.prevDelta);
 		le.cssColor = co.lineToBox(l, b) ? "red" : "blue";
@@ -858,7 +858,7 @@ function segmentToBoxDemo(scene: g.Scene): g.E {
 	const be = createBoxE(scene, b, "green");
 	const se = createSegmentE(scene, s, "blue", true);
 
-	se.pointMove.add(ev => {
+	se.onPointMove.add(ev => {
 		Vec2.add(s.position, ev.prevDelta);
 		Vec2.add(s.endPosition, ev.prevDelta);
 		Vec2.add(se, ev.prevDelta);
@@ -907,7 +907,7 @@ function polygonToSegmentDemo(scene: g.Scene): g.E {
 		cssColor: "green"
 	});
 
-	se.pointMove.add(ev => {
+	se.onPointMove.add(ev => {
 		Vec2.add(s.position, ev.prevDelta);
 		Vec2.add(s.endPosition, ev.prevDelta);
 		Vec2.add(se, ev.prevDelta);
@@ -924,8 +924,8 @@ function polygonToSegmentDemo(scene: g.Scene): g.E {
 function polygonToCircleDemo(scene: g.Scene): g.E {
 	const root = new g.E({ scene });
 
-	const red = (scene.assets.red as g.ImageAsset).asSurface();
-	const blue = (scene.assets.blue as g.ImageAsset).asSurface();
+	const red = scene.asset.getImageById("red").asSurface();
+	const blue = scene.asset.getImageById("blue").asSurface();
 
 	const c: co.Circle = {
 		position: { x: 64, y: 64 },
@@ -940,10 +940,10 @@ function polygonToCircleDemo(scene: g.Scene): g.E {
 		cssColor: "green"
 	});
 
-	ce.pointMove.add(ev => {
+	ce.onPointMove.add(ev => {
 		Vec2.add(c.position, ev.prevDelta);
 		Vec2.add(ce, ev.prevDelta);
-		ce.surface = co.polygonToCircle(p, c) ? red : blue;
+		ce.src = co.polygonToCircle(p, c) ? red : blue;
 		ce.invalidate();
 	});
 
@@ -976,7 +976,7 @@ function polygonToVecDemo(scene: g.Scene): g.E {
 		cssColor: "green"
 	});
 
-	ve.pointMove.add(ev => {
+	ve.onPointMove.add(ev => {
 		Vec2.add(ve, ev.prevDelta);
 		Vec2.add(v, ev.prevDelta);
 		ve.cssColor = co.polygonToVec(p, v) ? "red" : "blue";
@@ -1007,7 +1007,7 @@ function polygonToBoxDemo(scene: g.Scene): g.E {
 		cssColor: "green"
 	});
 
-	be.pointMove.add(ev => {
+	be.onPointMove.add(ev => {
 		Vec2.add(b.position, ev.prevDelta);
 		Vec2.add(be, ev.prevDelta);
 		be.cssColor = co.polygonToBox(p, b) ? "red" : "blue";
@@ -1038,7 +1038,7 @@ function polygonToAABBDemo(scene: g.Scene): g.E {
 		cssColor: "green"
 	});
 
-	aabbe.pointMove.add(ev => {
+	aabbe.onPointMove.add(ev => {
 		Vec2.add(aabb.min, ev.prevDelta);
 		Vec2.add(aabb.max, ev.prevDelta);
 		Vec2.add(aabbe, ev.prevDelta);
@@ -1068,7 +1068,7 @@ function polygonToLineDemo(scene: g.Scene): g.E {
 		cssColor: "green"
 	});
 
-	le.pointMove.add(ev => {
+	le.onPointMove.add(ev => {
 		Vec2.add(l.position, ev.prevDelta);
 		Vec2.add(le, ev.prevDelta);
 		le.cssColor = co.polygonToLine(p, l) ? "red" : "blue";
@@ -1099,7 +1099,7 @@ function polygonToPolygonDemo(scene: g.Scene): g.E {
 		touchable: true
 	});
 
-	p2e.pointMove.add(ev => {
+	p2e.onPointMove.add(ev => {
 		Vec2.add(p2.position, ev.prevDelta);
 		p2.vertices.forEach(v => Vec2.add(v, ev.prevDelta));
 
@@ -1150,7 +1150,7 @@ function main(_param: g.GameMainParameterObject): void {
 
 	let currentDemoE: g.E;
 
-	scene.loaded.add(() => {
+	scene.onLoad.add(() => {
 		const btnInactiveColor = "#4689FF";
 		const btnActiveAcolor = "#BAD3FF";
 		const labelInactiveColor = "white";
@@ -1161,7 +1161,7 @@ function main(_param: g.GameMainParameterObject): void {
 
 		const font = new g.DynamicFont({
 			game: g.game,
-			fontFamily: g.FontFamily.Monospace,
+			fontFamily: "monospace",
 			size: 14,
 		});
 		const demoRoot = new g.E({ scene });
@@ -1187,12 +1187,12 @@ function main(_param: g.GameMainParameterObject): void {
 		});
 
 		burgerBtn.append(burgerLabel);
-		burgerBtn.pointDown.add(_ev => {
+		burgerBtn.onPointDown.add(_ev => {
 			burgerBtn.touchable = false;
 			buttons.forEach(btn => btn.touchable = false);
 
 			let cntr = 0;
-			scene.update.add(() => {
+			scene.onUpdate.add(() => {
 				cntr++;
 				const s = cntr / cutinDuration;
 				const t = Math.sin(Math.PI / 2 * s);
@@ -1243,7 +1243,7 @@ function main(_param: g.GameMainParameterObject): void {
 			label.x = (btn.width - label.width) / 2;
 			label.modified();
 
-			btn.pointDown.add(_ev => {
+			btn.onPointDown.add(_ev => {
 				if (currentDemoE) {
 					currentDemoE.destroy();
 				}
@@ -1269,7 +1269,7 @@ function main(_param: g.GameMainParameterObject): void {
 				});
 
 				let cntr = 0;
-				scene.update.add(() => {
+				scene.onUpdate.add(() => {
 					cntr++;
 					const s = cntr / cutinDuration;
 					const t = Math.sin(Math.PI / 2 * s);
