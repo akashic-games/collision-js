@@ -1,5 +1,5 @@
 <p align="center">
-<img src="img/akashic.png"/>
+<img src="https://raw.githubusercontent.com/akashic-games/collision-js/master/img/akashic.png"/>
 </p>
 
 # collision-js
@@ -49,7 +49,7 @@ Akashic Engineの詳細な利用方法については、 [公式ページ](https
 
 ## APIリファレンス
 
-https://akashic-games.github.io/reference/collision-js/index.html
+https://akashic-games.github.io/collision-js/api/index.html
 
 ## ビルド方法
 
